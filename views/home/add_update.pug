@@ -1,0 +1,70 @@
+include ../head.pug
+body
+  .container.mt-5.create_update_form.bg-danger.bg-gradient.rounded.text-light.p-4
+    h1 #{mode}
+    .mb-3
+      label(for="eventName" class="form-label") Event Name
+      input(type="text" class="form-control" id="eventName" name="eventName" required)
+    .mb-3
+      label(for="eventDateTime" class="form-label") Event Date/Time
+      .input-group.date(id="datetimepicker1" data-target-input="nearest")
+        input(type="text" class="form-control datetimepicker-input" data-target="#datetimepicker1" id="eventDateTime" name="eventDateTime" required)
+        .input-group-append(data-target="#datetimepicker1" data-toggle="datetimepicker")
+          .input-group-text
+            i.fas.fa-calendar-alt
+    .mb-3
+      label(for="eventLocation" class="form-label") Event Location
+      input(type="text" class="form-control" id="eventLocation" name="eventLocation" required)
+    .mb-3
+      label(for="eventDescription" class="form-label") Event Description
+      input(type="text" class="form-control" id="eventDescription" name="eventDescription" required)
+    .d-flex.justify-content-between.gap-2
+      button(type="submit" class="btn btn-success w-100" onclick="submitForm()") #{mode === 'Update' ? 'Update' : 'Add'}
+      span &nbsp;
+      button(type="submit" class="btn btn-primary w-100" onclick="window.location.href='/'") Back to list
+
+  script.
+    const format = 'DD/MM/YYYY HH:mm'
+    const picker = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'),{
+        localization: {
+            'locale': 'en'
+        }
+    })
+    picker.dates.formatInput = function(date) {
+        return moment(date).format(format)
+    }
+
+    if ("#{mode}" === "Update") {
+      const eventData = !{JSON.stringify(eventData || {})}.event;
+      document.getElementById('eventName').value = eventData.eventName || '';
+
+      picker.dates.setValue(
+        new tempusDominus.DateTime(moment(eventData.eventDateTime, format))
+      );
+
+      document.getElementById('eventLocation').value = eventData.eventLocation || '';
+      document.getElementById('eventDescription').value = eventData.eventDescription || '';
+    }
+
+    function submitForm() {
+      const eventData = {
+        eventName: document.getElementById('eventName').value,
+        eventDateTime: document.getElementById('eventDateTime').value,
+        eventLocation: document.getElementById('eventLocation').value,
+        eventDescription: document.getElementById('eventDescription').value,
+      };
+
+      const url = "#{mode}" === "Update" ? `/api/event/${!{JSON.stringify(eventData || {})}.id}` : '/api/event';
+      const method = "#{mode}" === "Update" ? 'put' : 'post';
+
+      axios[method](url, eventData).then(response => {
+        alert('Success!');
+        location.href = '/'
+      })
+      .catch(error => {
+        if(error.response)
+          alert(JSON.stringify(error.response.data.errors))
+        else
+          alert(error)
+      });
+    }
