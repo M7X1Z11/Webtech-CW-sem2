@@ -1,0 +1,11 @@
+[
+    {
+        "id": "1",
+        "event": {
+            "eventName": "Boxing",
+            "eventDateTime": "010/01/2024 14:26",
+            "eventLocation": "Humo arena;",
+            "eventDescription": "World championship"
+        }
+    }
+]
