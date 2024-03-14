@@ -3,4 +3,4 @@ a course work to web technology module and also this website serve as a function
 this web  application is built arround node.js and express also pug as front-end also I hosted this website on amazon webservices as suggested by my Lecturer 
 
 link to git hub : (https://github.com/M7X1Z11/Webtech-CW-sem2)
-link to render : 
+link to render where the app is hosted : https://webtech-cw-sem2.onrender.com/
